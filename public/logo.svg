@@ -1,0 +1,29 @@
+<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient background circle -->
+  <circle cx="25" cy="25" r="20" fill="url(#logoGradient)"/>
+  
+  <!-- V letter in white with elegant styling -->
+  <path d="M15 16 L25 35 L35 16" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Small crown accent above V -->
+  <path d="M20 13 L25 10 L30 13 L29 14 L25 12 L21 14 Z" fill="white" opacity="0.9"/>
+  
+  <!-- Text with elegant spacing -->
+  <text x="55" y="22" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#d946ef" letter-spacing="1">
+    VIP
+  </text>
+  <text x="95" y="22" font-family="Georgia, serif" font-size="16" font-weight="400" fill="#c026d3">
+    For
+  </text>
+  <text x="55" y="40" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#a21caf" letter-spacing="0.5">
+    Women
+  </text>
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="logoGradient" x1="5" y1="5" x2="45" y2="45" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#d946ef"/>
+      <stop offset="100%" stop-color="#c026d3"/>
+    </linearGradient>
+  </defs>
+</svg>
