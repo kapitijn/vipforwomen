@@ -1,43 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
-import paypalClient from '@/lib/paypal';
-import { createOrder } from '@/lib/woocommerce';
-
-export async function POST(request: NextRequest) {
-  try {
-    const { items, billing } = await request.json();
-
-    // Validate items
-    if (!items || items.length === 0) {
-      return NextResponse.json(
-        { error: 'No items in cart' },
-        { status: 400 }
-      );
-    }
-
-    // Calculate total
-    const totalAmount = items.reduce(
-      (total: number, item: any) => total + item.price * item.quantity,
-      0
-    );
-
-    // Create PayPal order using new SDK
-    const { ordersController } = paypalClient;
-    const collect = {
-      body: {
-        intent: 'CAPTURE',
-        purchaseUnits: [
-          {
-            amount: {
-              currencyCode: 'USD',
-              value: totalAmount.toFixed(2),
-              breakdown: {
-                itemTotal: {
-                  currencyCode: 'USD',
-                  value: totalAmount.toFixed(2),
-                },
-              },
-            },
-            items: items.map((item: any) => ({
+// PayPal integration removed. WooCommerce handles payments.
               name: item.name,
               unitAmount: {
                 currencyCode: 'USD',
