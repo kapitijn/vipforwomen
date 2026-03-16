@@ -13,9 +13,20 @@ export default async function ProductPage({
     notFound();
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <ProductDetail product={product} />
-    </div>
-  );
+  return <ProductDetail product={product} />;
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const product = await getProductBySlug(params.slug);
+  
+  if (!product) {
+    return {
+      title: 'Product Not Found',
+    };
+  }
+
+  return {
+    title: `${product.name} | VIP For Women`,
+    description: product.short_description || product.description,
+  };
 }
