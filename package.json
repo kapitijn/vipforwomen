@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@paypal/paypal-server-sdk": "^2.2.0",
     "@paypal/react-paypal-js": "^8.9.2",
     "axios": "^1.6.5",
     "lucide-react": "^0.316.0",
