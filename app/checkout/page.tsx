@@ -3,15 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/cart';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+// PayPal integration removed. WooCommerce handles payments.
 import toast from 'react-hot-toast';
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, getTotalPrice, clearCart } = useCartStore();
   const [loading, setLoading] = useState(false);
-  const [paypalOrderId, setPaypalOrderId] = useState<string>('');
-  const [woocommerceOrderId, setWoocommerceOrderId] = useState<number>(0);
+  // PayPal integration removed. WooCommerce handles payments.
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -190,104 +189,7 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* PayPal Payment */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-2xl font-bold mb-4">Payment</h2>
-
-            {!formValid && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <p className="text-yellow-800">
-                  Please fill in all required fields before proceeding to payment.
-                </p>
-              </div>
-            )}
-
-            {formValid && (
-              <PayPalScriptProvider
-                options={{
-                  clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID!,
-                  currency: 'USD',
-                  intent: 'capture',
-                }}
-              >
-                <PayPalButtons
-                  style={{
-                    layout: 'vertical',
-                    color: 'gold',
-                    shape: 'rect',
-                    label: 'paypal',
-                  }}
-                  createOrder={async () => {
-                    setLoading(true);
-                    try {
-                      const response = await fetch('/api/create-payment-intent', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          items,
-                          billing: formData,
-                        }),
-                      });
-
-                      const data = await response.json();
-
-                      if (!response.ok) {
-                        throw new Error(data.error || 'Failed to create order');
-                      }
-
-                      setPaypalOrderId(data.orderId);
-                      setWoocommerceOrderId(data.woocommerceOrderId);
-                      return data.orderId;
-                    } catch (error: any) {
-                      toast.error(error.message || 'Failed to create order');
-                      throw error;
-                    } finally {
-                      setLoading(false);
-                    }
-                  }}
-                  onApprove={async (data) => {
-                    setLoading(true);
-                    try {
-                      const response = await fetch('/api/paypal-webhook', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          orderId: data.orderID,
-                          woocommerceOrderId,
-                        }),
-                      });
-
-                      const result = await response.json();
-
-                      if (!response.ok) {
-                        throw new Error(result.error || 'Payment failed');
-                      }
-
-                      toast.success('Payment successful!');
-                      clearCart();
-                      router.push('/order-confirmation');
-                    } catch (error: any) {
-                      toast.error(error.message || 'Payment processing failed');
-                    } finally {
-                      setLoading(false);
-                    }
-                  }}
-                  onError={(err) => {
-                    console.error('PayPal error:', err);
-                    toast.error('Payment failed. Please try again.');
-                  }}
-                  onCancel={() => {
-                    toast.error('Payment cancelled');
-                  }}
-                />
-              </PayPalScriptProvider>
-            )}
-
-            <div className="mt-4 text-sm text-gray-600 text-center">
-              <p>💳 Safe and secure payment with PayPal</p>
-              <p className="mt-1">You can pay with your PayPal account or credit card</p>
-            </div>
-          </div>
+          {/* Payment section removed. WooCommerce handles payments. */}
         </div>
 
         {/* Order Summary */}
