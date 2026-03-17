@@ -49,21 +49,22 @@ export default function Header() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            {!logoError ? (
-              <Image
-                src="/images/banners/vipheaderbanner.png"
-                alt="VIP For Women"
-                width={200}
-                height={50}
-                className="h-12 w-auto object-contain"
-                onError={() => setLogoError(true)}
-                priority
-              />
-            ) : (
-              <span className="text-2xl font-bold text-black">
+            <div className="flex items-center gap-4">
+              {!logoError ? (
+                <Image
+                  src="/images/banners/vipheaderbanner.png"
+                  alt="VIP For Women"
+                  width={200}
+                  height={50}
+                  className="h-12 w-auto object-contain"
+                  onError={() => setLogoError(true)}
+                  priority
+                />
+              ) : null}
+              <span className="text-2xl font-bold text-white">
                 VIP For Women
               </span>
-            )}
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
