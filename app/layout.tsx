@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 
 export const metadata: Metadata = {
-  title: 'VIP For Women - Luxury Fashion & Accessories',
-  description: 'Premium women\'s fashion, clothing, accessories and more',
+  title: 'VIP For Women',
+  description: 'Women\'s fashion, clothing, accessories and more',
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },

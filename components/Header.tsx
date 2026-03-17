@@ -51,7 +51,7 @@ export default function Header() {
           <Link href="/" className="flex items-center">
             {!logoError ? (
               <Image
-                src="/for vip women logo.png"
+                src="/images/banners/vipheaderbanner.png"
                 alt="VIP For Women"
                 width={200}
                 height={50}

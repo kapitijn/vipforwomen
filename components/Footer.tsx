@@ -90,15 +90,7 @@ export default function Footer() {
                   <MessageCircle className="w-4 h-4" />
                   890-2750 (Mahonylaan 61 Unit 17)
                 </a>
-                <a
-                  href="https://wa.me/5978902750"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 hover:text-luxury-silver transition"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  890-2750 (Anamoestraat)
-                </a>
+
               </div>
 
               <div className="flex space-x-4 pt-2">
