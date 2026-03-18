@@ -52,15 +52,12 @@ export default function Header() {
             <div className="flex items-center gap-4">
               <Image
                 src="/vipnewlogo.png"
-                alt="For VIP Women Logo"
+                alt="VIP Women Logo"
                 width={48}
                 height={48}
                 className="h-12 w-12 object-contain"
                 priority
               />
-              <span className="text-2xl font-bold text-white">
-                For VIP Women
-              </span>
             </div>
           </Link>
 
