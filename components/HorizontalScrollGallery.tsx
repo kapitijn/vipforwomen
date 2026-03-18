@@ -9,7 +9,7 @@ const items = [
     color: "#E5E4E2",
     label: "Summer Deals",
     subtitle: "Up to 70% Off",
-    image: "/images/banners/summer-deal.png",
+    image: "/images/banners/newsummer.png",
     icon: Tag,
   },
   {
@@ -17,7 +17,7 @@ const items = [
     color: "#F4F1E8",
     label: "New in Store",
     subtitle: "Fresh Arrivals",
-    image: "/images/banners/new-in-store.jpg",
+    image: "/images/banners/newinstore.png",
     icon: Sparkles,
   },
   {
@@ -25,7 +25,7 @@ const items = [
     color: "#C0C0C0",
     label: "New Bags",
     subtitle: "Exclusive Collection",
-    image: "/images/banners/new-bags.jpg",
+    image: "/images/banners/newbags.png",
     icon: ShoppingBag,
   },
   {
@@ -33,7 +33,7 @@ const items = [
     color: "#E5E4E2",
     label: "Hot Deals",
     subtitle: "Limited Time Offers",
-    image: "/images/banners/hot-deals.jpg",
+    image: "/images/banners/new-banner.png",
     icon: TrendingUp,
   },
 ]

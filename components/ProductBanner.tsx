@@ -32,8 +32,8 @@ export default function ProductBanner() {
           <div className="relative h-[500px] overflow-hidden bg-black">
             <div className="absolute inset-0 flex items-center justify-center">
               <Image
-                src="/vipnewlogo.png"
-                alt="Test VIP Logo"
+                src="/heratige.png"
+                alt="Signature Heritage Collection"
                 width={400}
                 height={400}
                 className="object-cover w-64 h-64 border border-luxury-silver"

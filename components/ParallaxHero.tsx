@@ -16,27 +16,24 @@ export default function ParallaxHero() {
   }, []);
 
   return (
-    <section className="relative w-full h-[600px] bg-black border-b border-neutral-800 overflow-hidden">
-      {/* Parallax background layers */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          transform: `translateY(${scrollY * 0.5}px)`,
-        }}
-      >
-        {/* Animated silver glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-luxury-silver opacity-5 blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-luxury-white-gold opacity-5 blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      </div>
-
-      {/* Content */}
-      <div 
+    <section
+      className="relative w-full h-[600px] border-b border-neutral-800 overflow-hidden bg-black"
+      style={{
+        backgroundImage: 'url(/images/banners/new-banner.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      {/* Content with Parallax effect */}
+      <div
         className="relative container mx-auto px-8 h-full flex items-center"
         style={{
           transform: `translateY(${scrollY * 0.3}px)`,
         }}
       >
         <div className="max-w-3xl">
+          {/* Removed <img>, now background */}
           <div 
             className="overflow-hidden mb-4"
             style={{
@@ -47,7 +44,6 @@ export default function ParallaxHero() {
               Exclusive Collection
             </p>
           </div>
-          
           <div 
             className="overflow-hidden mb-6"
             style={{
@@ -58,7 +54,6 @@ export default function ParallaxHero() {
               Luxury Redefined
             </h1>
           </div>
-          
           <div 
             className="overflow-hidden mb-8"
             style={{
@@ -69,7 +64,6 @@ export default function ParallaxHero() {
               Experience unparalleled elegance with our curated selection of premium fashion and accessories.
             </p>
           </div>
-          
           <div
             style={{
               transform: `translateY(${scrollY * 0.2}px)`,
