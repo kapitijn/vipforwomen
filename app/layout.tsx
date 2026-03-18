@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfair' });
 
 export const metadata: Metadata = {
-  title: 'For VIP Women',
+  title: 'forvipwomen',
   description: 'Women\'s fashion, clothing, accessories and more',
   icons: {
     icon: [

@@ -1,6 +1,6 @@
 # 🚀 Quick Start Guide
 
-Get your VIP For Women e-commerce site running in minutes!
+Get your forvipwomen e-commerce site running in minutes!
 
 ## Prerequisites Installed?
 
@@ -39,7 +39,7 @@ STRIPE_WEBHOOK_SECRET=whsec_your_secret
 
 # Site settings
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SITE_NAME=VIP For Women
+NEXT_PUBLIC_SITE_NAME=forvipwomen
 
 # Generate a random string for this
 API_SECRET_KEY=your-random-32-character-string

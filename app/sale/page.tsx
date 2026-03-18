@@ -102,6 +102,6 @@ export default async function SalePage({
 }
 
 export const metadata = {
-  title: 'Sale | For VIP Women',
-  description: 'Shop discounted luxury fashion and accessories at For VIP Women.',
+  title: 'Sale | forvipwomen',
+  description: 'Shop discounted luxury fashion and accessories at forvipwomen.',
 };

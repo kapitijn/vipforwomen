@@ -145,6 +145,6 @@ export default async function ShopPage({
 }
 
 export const metadata = {
-  title: 'Shop | For VIP Women',
-  description: 'Discover luxury fashion, accessories, and more at For VIP Women',
+  title: 'Shop | forvipwomen',
+  description: 'Discover luxury fashion, accessories, and more at forvipwomen',
 };

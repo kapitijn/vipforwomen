@@ -75,11 +75,11 @@ If you want to change the banner titles (e.g., "Summer Deals" → "Winter Sale")
 
 ## 🎨 Logo Updates
 
-Your current logo: `/public/for vip women logo.png`
+Your current logo: `/public/forvipwomen-logo.png`
 
 To change:
 1. Upload new logo to `/public/` folder
-2. Name it exactly: `for vip women logo.png` (or ask developer to update code)
+2. Name it exactly: `forvipwomen-logo.png` (or ask developer to update code)
 3. Recommended: 200x50px, transparent background PNG
 
 ---
@@ -113,7 +113,7 @@ To change:
     /banners          # Homepage horizontal scroll banners
     /hero             # Hero section images (future use)
     /products         # Additional product images
-  /for vip women logo.png  # Site logo
+  /forvipwomen-logo.png  # Site logo
 ```
 
 ### Component Locations

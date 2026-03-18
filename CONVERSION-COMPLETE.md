@@ -112,7 +112,7 @@ This installs PayPal packages and fixes all TypeScript errors.
 2. Login/signup with PayPal account
 3. Click "My Apps & Credentials"
 4. Click "Create App"
-5. Name it "VIP For Women"
+5. Name it "forvipwomen"
 6. Copy:
    - **Client ID** (starts with AXX...)
    - **Secret** (click Show to reveal)
@@ -134,7 +134,7 @@ WOOCOMMERCE_CONSUMER_SECRET=cs_your_secret
 
 # Site Config
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SITE_NAME=VIP For Women
+NEXT_PUBLIC_SITE_NAME=forvipwomen
 
 # Random string (any value)
 API_SECRET_KEY=your-random-string-here

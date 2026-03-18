@@ -1,6 +1,6 @@
 # PayPal Setup Guide for Suriname
 
-Complete guide to setting up PayPal payments for your VIP For Women e-commerce site.
+Complete guide to setting up PayPal payments for your forvipwomen e-commerce site.
 
 ## 🌍 Why PayPal for Suriname?
 
@@ -32,7 +32,7 @@ PayPal is the preferred payment method in Suriname and many Caribbean/South Amer
    Fill in:
    - Email address
    - Password
-   - Business name: "VIP For Women"
+   - Business name: "forvipwomen"
    - Business type: E-commerce
    - Products sold: Fashion & Accessories
    ```
@@ -61,7 +61,7 @@ PayPal is the preferred payment method in Suriname and many Caribbean/South Amer
    ```
    Dashboard → My Apps & Credentials
    - Under "Sandbox", click "Create App"
-   - App Name: "VIP For Women Shop"
+   - App Name: "forvipwomen Shop"
    - Click "Create App"
    
    Copy these credentials:
@@ -83,7 +83,7 @@ PayPal is the preferred payment method in Suriname and many Caribbean/South Amer
    Dashboard → My Apps & Credentials
    - Switch to "Live" tab (top of page)
    - Click "Create App"
-   - App Name: "VIP For Women Shop Live"
+   - App Name: "forvipwomen Shop Live"
    ```
 
 2. **Get Live Credentials**

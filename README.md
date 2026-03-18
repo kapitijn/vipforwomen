@@ -1,4 +1,4 @@
-# VIP For Women - E-commerce Platform
+# forvipwomen - E-commerce Platform
 
 A modern, headless e-commerce platform built with Next.js, WooCommerce, and Stripe.
 

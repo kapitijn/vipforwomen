@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-Common issues and their solutions for the VIP For Women e-commerce platform.
+Common issues and their solutions for the forvipwomen e-commerce platform.
 
 ## Table of Contents
 - [Installation Issues](#installation-issues)

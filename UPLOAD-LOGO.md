@@ -91,7 +91,7 @@ Upload as: `logo.png` or `logo.svg`
 - Shows on all pages
 
 ### **Scenario 2: Logo with Text**
-Upload a logo that includes "VIP For Women" text
+Upload a logo that includes "forvipwomen" text
 - Use wider dimensions (e.g., 200x50px)
 - Update width in Header.tsx: `width={200}`
 
@@ -136,7 +136,7 @@ The code is smart! If your logo file doesn't exist or fails to load:
 ```
 1. Try to load /logo.svg
    ↓
-2. If it fails → Show text "VIP For Women"
+2. If it fails → Show text "forvipwomen"
    ↓
 3. You still have a working website!
 ```

@@ -403,7 +403,7 @@ export default async function SalePage() {
 }
 
 export const metadata = {
-  title: 'Flash Sale | VIP For Women',
+  title: 'Flash Sale | forvipwomen',
   description: 'Exclusive discounts on luxury fashion and accessories'
 }
 ```

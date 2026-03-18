@@ -45,7 +45,7 @@ WOOCOMMERCE_CONSUMER_SECRET=cs_your_secret
 
 # Site Config
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SITE_NAME=VIP For Women
+NEXT_PUBLIC_SITE_NAME=forvipwomen
 
 API_SECRET_KEY=any-random-string-here
 ```
