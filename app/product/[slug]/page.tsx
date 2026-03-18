@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: `${product.name} | VIP For Women`,
+    title: `${product.name} | For VIP Women`,
     description: product.short_description || product.description,
   };
 }

@@ -16,27 +16,30 @@ export default function ProductBanner() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Debug image loading
+  const handleImageLoad = () => {
+    console.log('Test image loaded successfully');
+  };
+  const handleImageError = (e: any) => {
+    console.error('Test image failed to load', e);
+  };
+
   return (
     <section className="relative w-full bg-neutral-900 border-y border-neutral-800 overflow-hidden my-16">
       <div className="container mx-auto">
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left: Image */}
           <div className="relative h-[500px] overflow-hidden bg-black">
-            <div 
-              className="absolute inset-0"
-              style={{
-                transform: `scale(${1 + scrollY * 0.0002})`,
-              }}
-            >
-              {/* Placeholder for product image - replace with actual image */}
-              <div className="w-full h-full bg-gradient-to-br from-neutral-800 to-black flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-32 h-32 mx-auto mb-4 border border-luxury-silver flex items-center justify-center">
-                    <span className="text-luxury-silver text-6xl font-serif">V</span>
-                  </div>
-                  <p className="text-luxury-silver text-sm tracking-widest uppercase">Featured Product</p>
-                </div>
-              </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Image
+                src="/vipnewlogo.png"
+                alt="Test VIP Logo"
+                width={400}
+                height={400}
+                className="object-cover w-64 h-64 border border-luxury-silver"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+              />
             </div>
           </div>
 

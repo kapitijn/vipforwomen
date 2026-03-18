@@ -147,6 +147,6 @@ export default async function GiftGuidePage() {
 }
 
 export const metadata = {
-  title: 'Gift Guide | VIP For Women',
-  description: 'Curated gift ideas from VIP For Women for birthdays, anniversaries, and more.',
+  title: 'Gift Guide | For VIP Women',
+  description: 'Curated gift ideas from For VIP Women for birthdays, anniversaries, and more.',
 };

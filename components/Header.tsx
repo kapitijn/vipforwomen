@@ -50,19 +50,16 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <div className="flex items-center gap-4">
-              {!logoError ? (
-                <Image
-                  src="/images/banners/vipheaderbanner.png"
-                  alt="VIP For Women"
-                  width={200}
-                  height={50}
-                  className="h-12 w-auto object-contain"
-                  onError={() => setLogoError(true)}
-                  priority
-                />
-              ) : null}
+              <Image
+                src="/vipnewlogo.png"
+                alt="For VIP Women Logo"
+                width={48}
+                height={48}
+                className="h-12 w-12 object-contain"
+                priority
+              />
               <span className="text-2xl font-bold text-white">
-                VIP For Women
+                For VIP Women
               </span>
             </div>
           </Link>
@@ -169,6 +166,17 @@ export default function Header() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden pt-4 pb-2 space-y-2 bg-black max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center gap-3 mb-4">
+              <Image
+                src="/vipnewlogo.png"
+                alt="For VIP Women Logo"
+                width={40}
+                height={40}
+                className="h-10 w-10 object-contain"
+                priority
+              />
+              <span className="text-xl font-bold text-white">For VIP Women</span>
+            </div>
             <Link
               href="/"
               className="block py-2 text-white hover:text-neutral-300 transition uppercase text-sm tracking-widest"

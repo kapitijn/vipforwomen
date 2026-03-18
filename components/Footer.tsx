@@ -8,9 +8,9 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-12">
           {/* About */}
           <div>
-            <h3 className="text-xl font-serif font-light mb-6 text-white tracking-wider">VIP For Women</h3>
+            <img src="/vipnewlogo.png" alt="VIP For Women Logo" className="h-12 mb-6" />
             <p className="text-neutral-400 text-sm font-light leading-relaxed">
-              Curating excellence in women's fashion, accessories, and lifestyle since 2026.
+              Curating excellence in women's fashion, accessories, and lifestyle for Suriname's women.
             </p>
             <div className="w-12 h-[1px] bg-luxury-silver mt-6"></div>
           </div>
@@ -116,7 +116,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-neutral-800 mt-12 pt-8 text-center">
-          <p className="text-sm text-neutral-500 font-light tracking-wider">&copy; 2026 VIP For Women. All rights reserved.</p>
+          <p className="text-sm text-neutral-500 font-light tracking-wider">&copy; VIP For Women. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -9,7 +9,7 @@ const items = [
     color: "#E5E4E2",
     label: "Summer Deals",
     subtitle: "Up to 70% Off",
-    image: "/images/banners/summer-deals.jpg",
+    image: "/images/banners/summer-deal.png",
     icon: Tag,
   },
   {
