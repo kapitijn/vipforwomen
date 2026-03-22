@@ -1,31 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import ProductCard from './ProductCard'
-import { WooCommerceProduct } from '@/types'
+
+import ProductCard from './ProductCard';
+import { useQuery } from '@apollo/client/react';
+import { GET_PRODUCTS } from '@/lib/queries';
+
 
 export default function BestSellers() {
-  const [products, setProducts] = useState<WooCommerceProduct[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchBestSellers = async () => {
-      try {
-        // Fetch products sorted by popularity (most sales)
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/wp-json/wc/v3/products?per_page=8&orderby=popularity&order=desc&consumer_key=${process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_KEY}&consumer_secret=${process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET}`
-        )
-        const data = await response.json()
-        setProducts(data)
-      } catch (error) {
-        console.error('Error fetching best sellers:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchBestSellers()
-  }, [])
+  type ProductsQueryResult = { products: { nodes: any[] } };
+  const { data, loading, error } = useQuery<ProductsQueryResult>(GET_PRODUCTS, {
+    variables: { first: 8 },
+  });
+  const products = data?.products?.nodes || [];
 
   if (loading) {
     return (
@@ -36,7 +22,18 @@ export default function BestSellers() {
           </div>
         </div>
       </section>
-    )
+    );
+  }
+  if (error) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-black to-neutral-900">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-red-500">Error loading best sellers.</div>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -83,5 +80,5 @@ export default function BestSellers() {
         </div>
       </div>
     </section>
-  )
+  );
 }

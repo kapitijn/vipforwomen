@@ -1,36 +1,26 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import ProductCard from './ProductCard'
-import CountdownTimer from './CountdownTimer'
-import { WooCommerceProduct } from '@/types'
+
+import { useQuery } from '@apollo/client/react';
+import client from '@/lib/apollo-client';
+import { GET_PRODUCTS } from '@/lib/queries';
+import ProductCard from './ProductCard';
+import CountdownTimer from './CountdownTimer';
+
 
 export default function FlashSale() {
-  const [products, setProducts] = useState<WooCommerceProduct[]>([])
-  const [loading, setLoading] = useState(true)
-  
   // Set flash sale end date (e.g., 7 days from now)
-  const saleEndDate = new Date()
-  saleEndDate.setDate(saleEndDate.getDate() + 7)
+  const saleEndDate = new Date();
+  saleEndDate.setDate(saleEndDate.getDate() + 7);
 
-  useEffect(() => {
-    const fetchFlashSaleProducts = async () => {
-      try {
-        // Fetch products on sale
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/wp-json/wc/v3/products?per_page=8&on_sale=true&orderby=date&order=desc&consumer_key=${process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_KEY}&consumer_secret=${process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET}`
-        )
-        const data = await response.json()
-        setProducts(data)
-      } catch (error) {
-        console.error('Error fetching flash sale products:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  type ProductsQueryResult = { products: { nodes: any[] } };
+  const { data, loading, error } = useQuery<ProductsQueryResult>(GET_PRODUCTS, {
+    client,
+    variables: { first: 8 },
+  });
 
-    fetchFlashSaleProducts()
-  }, [])
+  // Filter products on sale (GraphQL may not support direct filter)
+  const products = data?.products?.nodes?.filter((p: any) => p.onSale) || [];
 
   if (loading) {
     return (
@@ -44,8 +34,9 @@ export default function FlashSale() {
     )
   }
 
+
   if (products.length === 0) {
-    return null // Don't show section if no sale products
+    return null; // Don't show section if no sale products
   }
 
   return (

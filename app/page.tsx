@@ -1,14 +1,23 @@
+
 import Link from 'next/link';
-import { getProducts } from '@/lib/woocommerce';
 import ProductCard from '@/components/ProductCard';
 import BrandCarousel from '@/components/BrandCarousel';
 import ParallaxHero from '@/components/ParallaxHero';
 import ProductBanner from '@/components/ProductBanner';
 import HorizontalScrollGallery from '@/components/HorizontalScrollGallery';
 import NewInStore from '@/components/NewInStore';
+import client from '@/lib/apollo-client';
+import { GET_PRODUCTS } from '@/lib/queries';
+
 
 export default async function Home() {
-  const { products } = await getProducts({ per_page: 16, featured: true });
+  type ProductsQueryResult = { products: { nodes: any[] } };
+  const { data } = await client.query<{ products: { nodes: any[] } }>({
+    query: GET_PRODUCTS,
+    variables: { first: 16 },
+    fetchPolicy: 'no-cache',
+  });
+  const products = (data as ProductsQueryResult)?.products?.nodes || [];
 
   return (
     <>

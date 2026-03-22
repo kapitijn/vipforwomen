@@ -1,40 +1,35 @@
+
 'use client'
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
 
-interface Category {
-  id: number
-  name: string
-  slug: string
-  count: number
-  image?: {
-    src: string
-  }
-}
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useQuery } from '@apollo/client/react';
+import { gql } from '@apollo/client';
 
-export default function CategoryGrid() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/wp-json/wc/v3/products/categories?per_page=8&hide_empty=true&consumer_key=${process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_KEY}&consumer_secret=${process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET}`
-        )
-        const data = await response.json()
-        setCategories(data)
-      } catch (error) {
-        console.error('Error fetching categories:', error)
-      } finally {
-        setLoading(false)
+const GET_CATEGORIES = gql`
+  query GetProductCategories($first: Int = 8) {
+    productCategories(first: $first) {
+      nodes {
+        id
+        name
+        slug
+        image {
+          sourceUrl
+        }
       }
     }
+  }
+`;
 
-    fetchCategories()
-  }, [])
+
+export default function CategoryGrid() {
+  type CategoriesQueryResult = { productCategories: { nodes: any[] } };
+  const { data, loading, error } = useQuery<CategoriesQueryResult>(GET_CATEGORIES, {
+    variables: { first: 8 },
+  });
+
 
   // Fallback categories with placeholder images if WooCommerce categories aren't set up yet
   const defaultCategories = [
@@ -80,7 +75,8 @@ export default function CategoryGrid() {
       image: '/images/categories/bottoms.jpg',
       description: 'Classic & Modern'
     },
-  ]
+  ];
+
 
   if (loading) {
     return (
@@ -91,11 +87,26 @@ export default function CategoryGrid() {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
-  // Use WooCommerce categories if available, otherwise use defaults
-  const displayCategories = categories.length > 0 ? categories : defaultCategories
+  if (error) {
+    console.error('Error fetching categories:', error);
+  }
+
+
+  // Use GraphQL categories if available, otherwise use defaults
+  const nodes = data?.productCategories?.nodes ?? [];
+  type DisplayCategory = { slug: string; name: string; image: string; description?: string; count?: number };
+  const displayCategories: DisplayCategory[] = nodes.length > 0
+    ? nodes.map((cat: any) => ({
+        slug: cat.slug,
+        name: cat.name,
+        image: typeof cat.image?.sourceUrl === 'string' ? cat.image.sourceUrl : '/placeholder.png',
+        description: '',
+        count: cat.count ?? 0,
+      }))
+    : defaultCategories;
 
   return (
     <section className="py-20 bg-neutral-900">
@@ -121,9 +132,9 @@ export default function CategoryGrid() {
             >
               {/* Background - Gradient placeholder or image */}
               <div className="absolute inset-0 bg-gradient-to-br from-neutral-800 to-neutral-950">
-                {'image' in category && category.image && (
+                {category.image && (
                   <Image
-                    src={typeof category.image === 'string' ? category.image : category.image.src}
+                    src={category.image}
                     alt={category.name}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -155,7 +166,7 @@ export default function CategoryGrid() {
                   </p>
                 ) : (
                   <p className="text-silver text-sm tracking-wider uppercase">
-                    {category.count} Products
+                    {('count' in category ? category.count : 0)} Products
                   </p>
                 )}
 

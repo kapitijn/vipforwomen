@@ -7,8 +7,9 @@ import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@/store/cart';
 import toast from 'react-hot-toast';
 
+
 interface ProductCardProps {
-  product: WooCommerceProduct;
+  product: any;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -17,17 +18,25 @@ export default function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    if (!product.purchasable || product.stock_status !== 'instock') {
+    if (!product.purchasable || product.stockStatus !== 'INSTOCK') {
       toast.error('Product is out of stock');
       return;
+    }
+
+    // Use salePrice if onSale, else regularPrice, else price
+    let price = product.price;
+    if (product.onSale && product.salePrice) {
+      price = product.salePrice;
+    } else if (product.regularPrice) {
+      price = product.regularPrice;
     }
 
     addItem({
       productId: product.id,
       name: product.name,
-      price: parseFloat(product.price),
+      price: parseFloat(price) || 0,
       quantity: 1,
-      image: product.images[0]?.src || '/placeholder.png',
+      image: product.image?.sourceUrl || '/placeholder.png',
       slug: product.slug,
     });
 
@@ -38,11 +47,12 @@ export default function ProductCard({ product }: ProductCardProps) {
     <Link href={`/product/${product.slug}`} className="group">
       <div className="bg-black border border-neutral-800 overflow-hidden hover:border-luxury-silver transition-all duration-500">
         {/* Product Image */}
+
         <div className="relative aspect-square overflow-hidden bg-neutral-900">
-          {product.images[0] ? (
+          {product.image?.sourceUrl ? (
             <Image
-              src={product.images[0].src}
-              alt={product.name}
+              src={product.image.sourceUrl}
+              alt={product.image.altText || product.name}
               fill
               className="object-cover group-hover:scale-105 transition duration-700"
             />
@@ -52,17 +62,23 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          {product.on_sale && (
+          {product.onSale && (
             <span className="absolute top-4 right-4 bg-luxury-silver text-black px-4 py-1 text-xs font-semibold uppercase tracking-widest">
               Sale
             </span>
           )}
 
-          {product.stock_status !== 'instock' && (
-            <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
-              <span className="text-white font-light text-sm uppercase tracking-widest">Out of Stock</span>
-            </div>
-          )}
+          {(() => {
+            const stock = (product.stockStatus || product.stock_status || '').toString().replace(/_/g, '').toLowerCase();
+            if (stock !== 'instock') {
+              return (
+                <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+                  <span className="text-white font-light text-sm uppercase tracking-widest">Out of Stock</span>
+                </div>
+              );
+            }
+            return null;
+          })()}
         </div>
 
         {/* Product Info */}
@@ -74,18 +90,41 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-lg font-light text-white">
-                ${parseFloat(product.price).toFixed(2)}
+                {
+                  (() => {
+                    // Prefer salePrice if onSale, else regularPrice, else price
+                    let price = product.price;
+                    if (product.onSale && product.salePrice) {
+                      price = product.salePrice;
+                    } else if (product.regularPrice) {
+                      price = product.regularPrice;
+                    }
+                    if (!price && product.price) price = product.price;
+                    if (!price || price === '' || price === null || price === undefined) {
+                      return '—';
+                    }
+                    // Remove any currency symbols and whitespace
+                    const priceNum = parseFloat((price || '').replace(/[^\d.\-]/g, ''));
+                    return isNaN(priceNum) ? '—' : `$${priceNum.toFixed(2)}`;
+                  })()
+                }
               </span>
-              {product.on_sale && product.regular_price && (
+              {product.onSale && product.regularPrice && (
                 <span className="text-sm text-neutral-500 line-through font-light">
-                  ${parseFloat(product.regular_price).toFixed(2)}
+                  {(() => {
+                    const reg = parseFloat((product.regularPrice || '').replace(/[^\d.\-]/g, ''));
+                    return isNaN(reg) ? '' : `$${reg.toFixed(2)}`;
+                  })()}
                 </span>
               )}
             </div>
 
             <button
               onClick={handleAddToCart}
-              disabled={product.stock_status !== 'instock'}
+              disabled={(() => {
+                const stock = (product.stockStatus || product.stock_status || '').toString().replace(/_/g, '').toLowerCase();
+                return stock !== 'instock';
+              })()}
               className="p-2 bg-white text-black hover:bg-luxury-silver transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
               title="Add to cart"
             >

@@ -2,42 +2,73 @@
 
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { WooCommerceProduct } from '@/types';
+
 import { ShoppingCart, Heart, Share2, Check, Truck, Shield, RotateCcw } from 'lucide-react';
 import { useCartStore } from '@/store/cart';
 import toast from 'react-hot-toast';
+
 import ProductCard from './ProductCard';
+import { useQuery } from '@apollo/client/react';
+import { gql } from '@apollo/client';
 
 interface ProductDetailProps {
-  product: WooCommerceProduct;
+  product: any;
 }
 
 export default function ProductDetail({ product }: ProductDetailProps) {
+  // Debug: log product data
+  // ...removed debug log for production
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [relatedProducts, setRelatedProducts] = useState<WooCommerceProduct[]>([]);
+  // Combine main image and gallery images into a single array
+  const images = [
+    ...(product.image ? [{
+      src: product.image.sourceUrl,
+      alt: product.image.altText || product.name,
+    }] : []),
+    ...((product.galleryImages?.nodes || []).map((img: any) => ({
+      src: img.sourceUrl,
+      alt: img.altText || product.name,
+    })) || [])
+  ];
+  // GraphQL: Fetch related products by category
+  const categoryId = product.productCategories?.nodes?.[0]?.id;
+  const GET_RELATED_PRODUCTS = gql`
+    query GetRelatedProducts($categoryId: ID!, $excludeSlug: String!) {
+      products(where: {categoryId: $categoryId, notIn: [$excludeSlug]}, first: 4) {
+        nodes {
+          id
+          name
+          slug
+          description
+          shortDescription
+          image {
+            sourceUrl
+            altText
+          }
+          ... on SimpleProduct {
+            price
+            regularPrice
+            salePrice
+            onSale
+            stockStatus
+          }
+        }
+      }
+    }
+  `;
+  type ProductsQueryResult = { products: { nodes: any[] } };
+  const { data: relatedData } = useQuery<ProductsQueryResult>(GET_RELATED_PRODUCTS, {
+    skip: !categoryId,
+    variables: {
+      categoryId: categoryId ? String(categoryId) : '',
+      excludeSlug: product.slug,
+    },
+  });
   const [isWishlisted, setIsWishlisted] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
-  // Fetch related products
-  useEffect(() => {
-    const fetchRelated = async () => {
-      try {
-        const categoryId = product.categories[0]?.id;
-        if (categoryId) {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_WOOCOMMERCE_URL}/wp-json/wc/v3/products?category=${categoryId}&per_page=4&exclude=${product.id}&consumer_key=${process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_KEY}&consumer_secret=${process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET}`
-          );
-          const data = await response.json();
-          setRelatedProducts(data);
-        }
-      } catch (error) {
-        console.error('Error fetching related products:', error);
-      }
-    };
 
-    fetchRelated();
-  }, [product.id, product.categories]);
 
   const handleAddToCart = () => {
     if (!product.purchasable || product.stock_status !== 'instock') {
@@ -72,7 +103,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           url: window.location.href,
         });
       } catch (error) {
-        console.log('Error sharing:', error);
+        // ...removed debug log for production
       }
     } else {
       // Fallback: Copy to clipboard
@@ -87,8 +118,8 @@ export default function ProductDetail({ product }: ProductDetailProps) {
   };
 
   // Calculate discount percentage
-  const discountPercent = product.on_sale && product.regular_price && product.sale_price
-    ? Math.round(((parseFloat(product.regular_price) - parseFloat(product.sale_price)) / parseFloat(product.regular_price)) * 100)
+  const discountPercent = (product.on_sale || product.onSale) && (product.regular_price || product.regularPrice) && (product.sale_price || product.salePrice)
+    ? Math.round(((parseFloat(product.regular_price || product.regularPrice) - parseFloat(product.sale_price || product.salePrice)) / parseFloat(product.regular_price || product.regularPrice)) * 100)
     : 0;
 
   return (
@@ -99,11 +130,11 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           <a href="/" className="hover:text-white transition">Home</a>
           <span>/</span>
           <a href="/shop" className="hover:text-white transition">Shop</a>
-          {product.categories[0] && (
+          {product.productCategories?.nodes?.[0] && (
             <>
               <span>/</span>
-              <a href={`/shop?category=${product.categories[0].slug}`} className="hover:text-white transition">
-                {product.categories[0].name}
+              <a href={`/shop?category=${product.productCategories.nodes[0].slug}`} className="hover:text-white transition">
+                {product.productCategories.nodes[0].name}
               </a>
             </>
           )}
@@ -118,10 +149,10 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           {/* Product Images */}
           <div>
             <div className="relative aspect-square bg-neutral-900 rounded-lg overflow-hidden mb-4 group">
-              {product.images[selectedImage] ? (
+              {images[selectedImage] ? (
                 <Image
-                  src={product.images[selectedImage].src}
-                  alt={product.name}
+                  src={images[selectedImage].src}
+                  alt={images[selectedImage].alt || product.name}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   priority
@@ -154,11 +185,11 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             </div>
 
             {/* Thumbnail Gallery */}
-            {product.images.length > 1 && (
+            {images.length > 1 && (
               <div className="grid grid-cols-4 gap-3">
-                {product.images.slice(0, 4).map((image, index) => (
+                {images.slice(0, 4).map((image: any, index: number) => (
                   <button
-                    key={image.id}
+                    key={image.src + index}
                     onClick={() => setSelectedImage(index)}
                     className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImage === index
@@ -181,9 +212,9 @@ export default function ProductDetail({ product }: ProductDetailProps) {
           {/* Product Info */}
           <div>
             {/* Categories */}
-            {product.categories.length > 0 && (
+            {product.productCategories?.nodes?.length > 0 && (
               <div className="flex gap-2 mb-4">
-                {product.categories.map((category) => (
+                {product.productCategories.nodes.map((category: any) => (
                   <a
                     key={category.id}
                     href={`/shop?category=${category.slug}`}
@@ -202,14 +233,35 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             {/* Price */}
             <div className="flex items-center gap-4 mb-6">
               <span className="text-5xl font-bold text-white">
-                ${parseFloat(product.price).toFixed(2)}
+                {
+                  (() => {
+                    // Prefer salePrice if onSale, then regularPrice, then price
+                    let price = product.price;
+                    if (product.onSale && product.salePrice) {
+                      price = product.salePrice;
+                    } else if (product.regularPrice) {
+                      price = product.regularPrice;
+                    }
+                    // Fallback: if price is still not set, try product.price
+                    if (!price && product.price) price = product.price;
+                    if (!price || price === '' || price === null || price === undefined) {
+                      return '—';
+                    }
+                    // Remove any currency symbols and whitespace
+                    const priceNum = parseFloat((price || '').replace(/[^\d.\-]/g, ''));
+                    return isNaN(priceNum) ? '—' : `$${priceNum.toFixed(2)}`;
+                  })()
+                }
               </span>
-              {product.on_sale && product.regular_price && (
+              {product.onSale && product.regularPrice && (
                 <span className="text-2xl text-neutral-500 line-through">
-                  ${parseFloat(product.regular_price).toFixed(2)}
+                  {(() => {
+                    const reg = parseFloat((product.regularPrice || '').replace(/[^\d.\-]/g, ''));
+                    return isNaN(reg) ? '' : `$${reg.toFixed(2)}`;
+                  })()}
                 </span>
               )}
-              {product.on_sale && discountPercent > 0 && (
+              {product.onSale && discountPercent > 0 && (
                 <span className="text-green-500 font-semibold">
                   Save {discountPercent}%
                 </span>
@@ -218,14 +270,15 @@ export default function ProductDetail({ product }: ProductDetailProps) {
 
             {/* Stock Status */}
             <div className="mb-6 flex items-center gap-2">
-              {product.stock_status === 'instock' ? (
-                <>
-                  <Check className="w-5 h-5 text-green-500" />
-                  <span className="text-green-500 font-semibold">In Stock</span>
-                </>
-              ) : (
-                <span className="text-red-500 font-semibold">Out of Stock</span>
-              )}
+              {(() => {
+                // Accept both 'instock' and 'IN_STOCK' (case-insensitive, underscore-insensitive)
+                const stock = (product.stockStatus || product.stock_status || '').toString().replace(/_/g, '').toLowerCase();
+                if (stock === 'instock') {
+                  return <><Check className="w-5 h-5 text-green-500" /><span className="text-green-500 font-semibold">In Stock</span></>;
+                } else {
+                  return <span className="text-red-500 font-semibold">Out of Stock</span>;
+                }
+              })()}
             </div>
 
             {/* Short Description */}
@@ -331,16 +384,16 @@ export default function ProductDetail({ product }: ProductDetailProps) {
                   <span className="text-white font-semibold">SKU:</span> {product.sku}
                 </p>
               )}
-              {product.categories.length > 0 && (
+              {product.productCategories?.nodes?.length > 0 && (
                 <p className="text-silver">
                   <span className="text-white font-semibold">Categories:</span>{' '}
-                  {product.categories.map((cat) => cat.name).join(', ')}
+                  {product.productCategories.nodes.map((cat: any) => cat.name).join(', ')}
                 </p>
               )}
               {product.tags && product.tags.length > 0 && (
                 <p className="text-silver">
                   <span className="text-white font-semibold">Tags:</span>{' '}
-                  {product.tags.map((tag) => tag.name).join(', ')}
+                  {product.tags.map((tag: any) => tag.name).join(', ')}
                 </p>
               )}
             </div>
@@ -362,7 +415,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
       </div>
 
       {/* Related Products */}
-      {relatedProducts.length > 0 && (
+      {(relatedData?.products?.nodes ?? []).length > 0 && (
         <section className="py-20 bg-neutral-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
@@ -376,7 +429,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {relatedProducts.map((relatedProduct) => (
+              {(relatedData?.products?.nodes ?? []).map((relatedProduct: any) => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} />
               ))}
             </div>

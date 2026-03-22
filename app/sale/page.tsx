@@ -1,5 +1,8 @@
-import { getProducts } from '@/lib/woocommerce';
+
 import ProductCard from '@/components/ProductCard';
+import client from '@/lib/apollo-client';
+import { GET_PRODUCTS } from '@/lib/queries';
+
 
 export default async function SalePage({
   searchParams,
@@ -8,13 +11,20 @@ export default async function SalePage({
 }) {
   const page = parseInt(searchParams.page || '1', 10);
 
-  const { products, totalPages } = await getProducts({
-    page,
-    per_page: 16,
-    on_sale: true,
-    orderby: 'date',
-    order: 'desc',
+  const variables: any = {
+    first: 16,
+    where: { onSale: true, orderby: 'DATE' },
+  };
+
+  type ProductsQueryResult = { products: { nodes: any[] } };
+  const { data } = await client.query<{ products: { nodes: any[] } }>({
+    query: GET_PRODUCTS,
+    variables,
+    fetchPolicy: 'no-cache',
   });
+  const products = (data as ProductsQueryResult)?.products?.nodes || [];
+  // Note: GraphQL pagination (totalPages) would require a separate query for total count if needed
+  const totalPages = 1;
 
   return (
     <div className="min-h-screen bg-black">

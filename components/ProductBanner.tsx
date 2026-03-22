@@ -18,10 +18,10 @@ export default function ProductBanner() {
 
   // Debug image loading
   const handleImageLoad = () => {
-    console.log('Test image loaded successfully');
+    // ...removed for production
   };
   const handleImageError = (e: any) => {
-    console.error('Test image failed to load', e);
+    // ...removed for production
   };
 
   return (

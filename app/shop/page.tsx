@@ -1,9 +1,9 @@
-import { getProducts } from '@/lib/woocommerce';
+
 import ProductCard from '@/components/ProductCard';
-import FlashSale from '@/components/FlashSale';
-import CategoryGrid from '@/components/CategoryGrid';
-import BestSellers from '@/components/BestSellers';
-import GiftIdeas from '@/components/GiftIdeas';
+import ShopFeaturedSections from '@/components/ShopFeaturedSections';
+import client from '@/lib/apollo-client';
+import { GET_PRODUCTS } from '@/lib/queries';
+
 
 export default async function ShopPage({
   searchParams,
@@ -11,14 +11,37 @@ export default async function ShopPage({
   searchParams: { page?: string; category?: string; search?: string; orderby?: string; on_sale?: string };
 }) {
   const page = parseInt(searchParams.page || '1');
-  const { products, totalPages } = await getProducts({
-    page,
-    per_page: 12,
-    category: searchParams.category,
-    search: searchParams.search,
-    orderby: searchParams.orderby as any,
-    on_sale: searchParams.on_sale === 'true',
+  const variables: any = {
+    first: 100, // fetch more to allow client-side filtering
+    after: null,
+  };
+
+  type ProductsQueryResult = { products: { nodes: any[] } };
+  const { data } = await client.query<{ products: { nodes: any[] } }>({
+    query: GET_PRODUCTS,
+    variables,
+    fetchPolicy: 'no-cache',
   });
+  let products = (data as ProductsQueryResult)?.products?.nodes || [];
+  // Client-side filtering workaround
+  if (searchParams.category) {
+    products = products.filter((product: any) =>
+      product.productCategories?.nodes?.some((cat: any) => cat.slug === searchParams.category)
+    );
+  }
+  if (searchParams.search) {
+    const search = searchParams.search.toLowerCase();
+    products = products.filter((product: any) =>
+      product.name?.toLowerCase().includes(search) ||
+      product.description?.toLowerCase().includes(search) ||
+      product.shortDescription?.toLowerCase().includes(search)
+    );
+  }
+  if (searchParams.on_sale === 'true') {
+    products = products.filter((product: any) => product.onSale);
+  }
+  // Note: GraphQL pagination (totalPages) would require a separate query for total count if needed
+  const totalPages = 1;
 
   // Show featured sections only on main shop page (no filters)
   const showFeaturedSections = !searchParams.category && !searchParams.search && !searchParams.orderby && !searchParams.on_sale && page === 1;
@@ -45,14 +68,7 @@ export default async function ShopPage({
       </div>
 
       {/* Featured Sections - Show only on main shop page */}
-      {showFeaturedSections && (
-        <>
-          <FlashSale />
-          <CategoryGrid />
-          <BestSellers />
-          <GiftIdeas />
-        </>
-      )}
+      {showFeaturedSections && <ShopFeaturedSections />}
 
       {/* Products Grid Section */}
       <section className="py-20 bg-black">
