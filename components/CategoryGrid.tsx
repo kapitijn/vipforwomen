@@ -57,12 +57,6 @@ export default function CategoryGrid() {
       description: 'Step in Style'
     },
     { 
-      slug: 'jewelry', 
-      name: 'Jewelry', 
-      image: '/images/categories/jewelry.jpg',
-      description: 'Refined Details'
-    },
-    { 
       slug: 'outerwear', 
       name: 'Outerwear', 
       image: '/images/categories/outerwear.jpg',
